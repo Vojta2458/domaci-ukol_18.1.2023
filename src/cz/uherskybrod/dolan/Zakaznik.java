@@ -1,5 +1,6 @@
 package cz.uherskybrod.dolan;
 
+import java.io.IOException;
 public class Zakaznik {
 
     private String jmeno;
@@ -24,5 +25,17 @@ public class Zakaznik {
 
     public void setProdeje(int prodeje) {
         this.prodeje = prodeje;
+    }
+
+    public void zvysPocetProdeju(int pocet){
+        try{
+            if (pocet <= 0){
+                throw new IOException();
+            }else {
+                prodeje =+ pocet;
+            }
+        }catch (IOException e){
+            System.err.println("Nelze zvětšit počet prodejů o zápornou hodnotu!");
+        }
     }
 }

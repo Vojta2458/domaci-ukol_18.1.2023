@@ -9,41 +9,32 @@ public class Zapis {
 
     private List<Zakaznik> zakaznikList = new ArrayList<>();
 
-    public void prectiSoubor(String soubor, String oddelovac){
-        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(soubor)))) {
-            while (scanner.hasNextLine()) {
-                String dalsiRadek = scanner.nextLine();
-                String [] polozka = dalsiRadek.split(oddelovac);
-                String jmeno = polozka[0].trim();
-                int prodeje = Integer.parseInt(polozka[1].trim());
-
-                zakaznikList.add(new Zakaznik(jmeno, prodeje));
+    public void vypisZeSouboru(String nazevSouboru, String oddelovac) throws MyException {
+        try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(nazevSouboru)))) {
+            while(scanner.hasNextLine()){
+                String radek = scanner.nextLine();
+                String[] polozka = radek.split(oddelovac);
+                String jmeno = polozka[0];
+                int pocetProdeju = Integer.parseInt(polozka[1]);
+                Zakaznik zakaznik = new Zakaznik(jmeno, pocetProdeju);
+                zakaznikList.add(zakaznik);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new MyException("Nastala chyba: ");
         }
     }
-    public void zmenSoubor(String soubor, String oddelovac){
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(soubor)))) {
+    public void zmenSoubor(String nazevSouboru, String oddelovac) throws MyException {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(nazevSouboru)))) {
             String radek;
-            for (Zakaznik zakaznik: zakaznikList) {
-                radek = zakaznik.getJmeno()+oddelovac+zakaznik.getProdeje();
+            for (Zakaznik zakaznik : zakaznikList){
+                radek = zakaznik.getJmeno() + oddelovac + zakaznik.getProdeje();
                 writer.println(radek);
             }
-            writer.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new MyException("Nastala chyba: ");
         }
     }
-
-    public void pridej(Zakaznik novyZakaznik) {
-        zakaznikList.add(novyZakaznik);
-    }
-    public void odeber(int index) {
-        zakaznikList.remove(index);
-    }
-
-    public List<Zakaznik> getList() {
-        return new ArrayList<>(zakaznikList);
-    }
+    public List<Zakaznik> getList(){return new ArrayList<>(zakaznikList);}
+    public void pridej(Zakaznik novyZakaznik){zakaznikList.add(novyZakaznik);}
+    public void odeber(int index){zakaznikList.remove(index);}
 }
